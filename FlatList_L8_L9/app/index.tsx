@@ -1,26 +1,17 @@
-import colors from "@/styles/colors";
+import ListItem from "@/components/ListItem";
+import ListItemSeparator from "@/components/ListItemSeperator";
+import { DATA, dataType } from "@/data/appData";
 import defaultStyles from "@/styles/defaultStyles";
 import { useState } from "react";
 import {
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from "react-native";
 
 export default function Index() {
-  type dataType = {
-    id: string; // unique identifier in list
-    title: string;  //text I was to show in list
-  }
-
-  const DATA: dataType[] = [
-    {id: "1", title: "First Item"},
-    {id: "2", title: "Second Item"},
-    {id: "3", title: "Third Item"},
-    {id: "4", title: "Fourth Item"},
-  ]
+  
   const [selectedId, setSelectedId] = 
       useState<string>("1");
 
@@ -39,22 +30,16 @@ export default function Index() {
           <FlatList
             data={DATA}
             keyExtractor={(item: dataType) => item.id}
+            extraData={selectedId}
+            ItemSeparatorComponent={() => (
+              <ListItemSeparator color='purple'/>
+            )}
             renderItem={({item}) => (
-              <TouchableOpacity onPress={() =>
-                selectedList(item)}>
-                  <View style={[styles.flatListRow,
-                    {backgroundColor: item.id === selectedId ?
-                      colors.primary : colors.secondary
-                    },
-                    ]} >
-
-                    <Text style={[styles.titleText,
-                    {color: item.id === selectedId ?
-                      colors.text.light : colors.text.dark
-                    },
-                    ]} >{item.title}</Text>
-                  </View>
-              </TouchableOpacity>
+              <ListItem
+                item = {item}
+                isSelected = {item.id === selectedId}
+                  onPress={selectedList}
+                  />
             )
           }
           />
@@ -67,21 +52,5 @@ export default function Index() {
 const styles = StyleSheet.create({
   flatlist: {
     alignItems: "center",
-  },
-  flatListRow: {
-    backgroundColor: 'pink',
-    width: 250,
-    margin: 5,
-    padding: 10,
-  },
-  titleContainer: {
-    marginTop: 5,
-    width: 300,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-  },
-  titleText: {
-    fontSize: 24,
-    padding: 10,
   },
 });
